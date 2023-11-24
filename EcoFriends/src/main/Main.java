@@ -1,5 +1,3 @@
-//bobby's comment test kuting bayot bayot
-
 package main;
 
 import javax.swing.*;
