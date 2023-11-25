@@ -1,4 +1,3 @@
-//bobby's branch test
 package main;
 
 import javax.swing.*;
@@ -18,5 +17,7 @@ public class Main {
 
         window.setLocationRelativeTo(null);
         window.setVisible(true);
+
+        gamePanel.startGameThread();
     }
 }
