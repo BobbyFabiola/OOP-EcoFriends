@@ -9,7 +9,6 @@ public class Main {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setResizable(false);
         window.setTitle("EcoFriends");
-
         GamePanel gamePanel = new GamePanel();
         window.add(gamePanel);
 
