@@ -76,4 +76,8 @@ public class Player extends Entity {
         int playerHeight = gp.tileSize * 2;
         g2.drawImage(image, x, y, playerWidth, playerHeight, null);                                             //only for player
     }
+
+    public Double getScaleFactor() {
+        return 1.0;
+    }
 }
