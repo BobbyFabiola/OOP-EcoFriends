@@ -82,6 +82,7 @@ public class Player extends Entity {
 
         g2.drawImage(image, x, y, playerWidth, playerHeight, null);                                             //only for player
     }
+<<<<<<< HEAD
 
     public Double getScaleFactor() {
         return 1.0;
@@ -103,4 +104,6 @@ public class Player extends Entity {
     public int getY() {
         return y;
     }
+=======
+>>>>>>> parent of bdd05a8 (Falling corn!)
 }

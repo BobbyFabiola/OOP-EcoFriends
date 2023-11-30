@@ -1,7 +1,6 @@
 package main;
 
 import entity.Player;
-import object.SuperObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -33,6 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;                                                                                                  //keeps program running until you stop it
     Player player = new Player(this, keyH);
 
+<<<<<<< HEAD
     private int scoreValue;
     private  int cornsCaught = 0;
     private  int cornsMissed = 0;
@@ -45,6 +45,8 @@ public class GamePanel extends JPanel implements Runnable {
         return screenWidth;
     }
 
+=======
+>>>>>>> parent of bdd05a8 (Falling corn!)
     public GamePanel () {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
@@ -57,8 +59,6 @@ public class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        aSetter.setObject();                                                                                            //call to initialize objects
     }
 
     public void startGameThread () {                                                                                    //instantiating the thread
@@ -68,8 +68,28 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run () {                                                                                                //the game loop, core of the game; sleep method
+//        long currentTime = System.nanoTime();                                                                         //checks current system time
         double drawInterval = (double) 100000000 /FPS;                                                                  //1 sec / 60 FPS; we draw the screen 60x / sec
         double nextDrawTime = System.nanoTime() + drawInterval;
+
+//        while (gameThread != null) {
+//            update();
+//            repaint();
+//
+//            try {
+//                double remainingTime = nextDrawTime - System.nanoTime();
+//                remainingTime = remainingTime /1000000;
+//
+//                if (remainingTime < 0) {
+//                    remainingTime = 0;
+//                }
+//                Thread.sleep((long) remainingTime);
+//
+//                nextDrawTime += drawInterval;
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);                             //replaces the while loop
 
@@ -81,6 +101,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update () {                                                                                             //animal movement
         player.update();
+<<<<<<< HEAD
         updateCornObjects ();
     }
 
@@ -101,6 +122,8 @@ public class GamePanel extends JPanel implements Runnable {
                 }
             }
         }
+=======
+>>>>>>> parent of bdd05a8 (Falling corn!)
     }
 
     private void setCornsCaught (SuperObject corn) {
@@ -123,6 +146,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         player.draw(g2);
+<<<<<<< HEAD
 
         //DRAW CORN OBJECTS W/ SCALING
         for (SuperObject corn: obj) {
@@ -133,6 +157,8 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
+=======
+>>>>>>> parent of bdd05a8 (Falling corn!)
         g2.dispose();
     }
 }
