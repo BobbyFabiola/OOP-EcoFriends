@@ -1,6 +1,7 @@
 package main;
 
 import entity.Player;
+import object.SuperObject;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,6 +33,10 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;                                                                                                  //keeps program running until you stop it
     Player player = new Player(this, keyH);
 
+    //OBJECTS
+    public AssetSetter aSetter = new AssetSetter (this);
+    public SuperObject obj[] = new SuperObject[3];                                                                      //means we can display up to 10 objects at the same time
+
     public GamePanel () {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
@@ -44,6 +49,8 @@ public class GamePanel extends JPanel implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        aSetter.setObject();                                                                                            //call to initialize objects
     }
 
     public void startGameThread () {                                                                                    //instantiating the thread
@@ -53,28 +60,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run () {                                                                                                //the game loop, core of the game; sleep method
-//        long currentTime = System.nanoTime();                                                                         //checks current system time
         double drawInterval = (double) 100000000 /FPS;                                                                  //1 sec / 60 FPS; we draw the screen 60x / sec
         double nextDrawTime = System.nanoTime() + drawInterval;
-
-//        while (gameThread != null) {
-//            update();
-//            repaint();
-//
-//            try {
-//                double remainingTime = nextDrawTime - System.nanoTime();
-//                remainingTime = remainingTime /1000000;
-//
-//                if (remainingTime < 0) {
-//                    remainingTime = 0;
-//                }
-//                Thread.sleep((long) remainingTime);
-//
-//                nextDrawTime += drawInterval;
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
 
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);                             //replaces the while loop
 
@@ -86,6 +73,19 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update () {                                                                                             //animal movement
         player.update();
+        updateCornObjects ();
+    }
+
+    private void updateCornObjects() {
+        for (SuperObject corn: obj) {
+            if (corn != null) {
+                corn.worldY += 3;                                                                                       //falling speed
+                if (corn.worldY > screenHeight) {                                                                       //reset corn position when off the screen
+                    corn.worldX = (int) (Math.random() * screenWidth);
+                    corn.worldY = -tileSize - (int) (Math.random() * tileSize * 3) - 1 * 50;
+                }
+            }
+        }
     }
 
     public void paintComponent (Graphics g) {                                                                           //built in method
@@ -98,6 +98,17 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         player.draw(g2);
+
+        //DRAW CORN OBJECTS W/ SCALING
+        for (SuperObject corn: obj) {
+            if (corn != null) {
+//                double scaleFactor = player.getScaleFactor();
+                int scaledWidth = tileSize * 1;                                         // Adjust the scaling factor as needed
+                int scaledHeight = tileSize * 1;                                        // Adjust the scaling factor as needed
+                g2.drawImage(corn.image, corn.worldX, corn.worldY,scaledWidth, scaledHeight, null);
+            }
+        }
+
         g2.dispose();
     }
 }
