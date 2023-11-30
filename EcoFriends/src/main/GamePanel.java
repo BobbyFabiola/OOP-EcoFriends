@@ -33,9 +33,17 @@ public class GamePanel extends JPanel implements Runnable {
     Thread gameThread;                                                                                                  //keeps program running until you stop it
     Player player = new Player(this, keyH);
 
+    private int scoreValue;
+    private  int cornsCaught = 0;
+    private  int cornsMissed = 0;
+
     //OBJECTS
     public AssetSetter aSetter = new AssetSetter (this);
     public SuperObject obj[] = new SuperObject[3];                                                                      //means we can display up to 10 objects at the same time
+
+    public int getScreenWidth() {
+        return screenWidth;
+    }
 
     public GamePanel () {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -80,12 +88,29 @@ public class GamePanel extends JPanel implements Runnable {
         for (SuperObject corn: obj) {
             if (corn != null) {
                 corn.worldY += 3;                                                                                       //falling speed
-                if (corn.worldY > screenHeight) {                                                                       //reset corn position when off the screen
-                    corn.worldX = (int) (Math.random() * screenWidth);
-                    corn.worldY = -tileSize - (int) (Math.random() * tileSize * 3) - 1 * 50;
+
+                int collisionYCoordinate = player.getY() + player.getHeight();;                                                                         // Change this to the desired y-coordinate
+                if (corn.checkCollision(player, collisionYCoordinate)) {                                               // Check if corn collides with player at a specific y-coordinate
+                    corn.setFalling(false, this);
+                    setCornsCaught(corn);
+                }
+
+                if (corn.worldY > screenHeight) {
+                    corn.resetPosition(this);                                                                       // Reset corn position when off the screen
+                    setCornsMissed();
                 }
             }
         }
+    }
+
+    private void setCornsCaught (SuperObject corn) {
+        cornsCaught = cornsCaught + 1;
+        System.out.println("Corns Caught: " + cornsCaught);
+    }
+
+    private void setCornsMissed () {
+        cornsMissed = cornsMissed + 1;
+        System.out.println("Corns Missed: " + cornsMissed);
     }
 
     public void paintComponent (Graphics g) {                                                                           //built in method
@@ -102,9 +127,8 @@ public class GamePanel extends JPanel implements Runnable {
         //DRAW CORN OBJECTS W/ SCALING
         for (SuperObject corn: obj) {
             if (corn != null) {
-//                double scaleFactor = player.getScaleFactor();
-                int scaledWidth = tileSize * 1;                                         // Adjust the scaling factor as needed
-                int scaledHeight = tileSize * 1;                                        // Adjust the scaling factor as needed
+                int scaledWidth = tileSize;                                                                             // Adjust the scaling factor as needed
+                int scaledHeight = tileSize;                                                                            // Adjust the scaling factor as needed
                 g2.drawImage(corn.image, corn.worldX, corn.worldY,scaledWidth, scaledHeight, null);
             }
         }

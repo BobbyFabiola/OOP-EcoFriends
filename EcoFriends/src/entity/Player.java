@@ -14,12 +14,20 @@ public class Player extends Entity {
     GamePanel gp;
     KeyHandler keyH;
 
+    private int playerWidth;
+    private int playerHeight;
+
     public Player (GamePanel gp, KeyHandler keyH) {                                                                     //instantiated in GamePanel class
         this.gp = gp;
         this.keyH = keyH;
 
         setDefaultValues();
         getPlayerImage();
+
+        playerWidth = gp.tileSize * 2;
+        playerHeight = gp.tileSize * 2;
+
+        solidArea = new Rectangle(8, 16, 32, 32);                                                //solid area for player
     }
 
     public void setDefaultValues () {
@@ -72,12 +80,27 @@ public class Player extends Entity {
                 break;
         }
 
-        int playerWidth = gp.tileSize * 2;
-        int playerHeight = gp.tileSize * 2;
         g2.drawImage(image, x, y, playerWidth, playerHeight, null);                                             //only for player
     }
 
     public Double getScaleFactor() {
         return 1.0;
+    }
+
+    //GETTERS FOR OBJECT BOUNDS
+    public int getWidth() {
+        return playerWidth;
+    }
+
+    public int getHeight() {
+        return playerHeight;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }
