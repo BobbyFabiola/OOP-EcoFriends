@@ -25,7 +25,7 @@ public class Player extends Entity {
     public void setDefaultValues () {
         //SET PLAYER DEFAULT VALUES
         x = 560;                                                                                                        //HARD CODED
-        y = 430;
+        y = 400;
         speed = 8;                                                                                                      //originally 4, but just wanted to see it slow down
         direction = "front";                                                                                            //for default direction
     }
@@ -80,4 +80,6 @@ public class Player extends Entity {
     public Double getScaleFactor() {
         return 1.0;
     }
+
+
 }
