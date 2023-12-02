@@ -8,6 +8,7 @@ import java.awt.image.RescaleOp;
 import java.io.IOException;
 import java.io.InputStream;
 import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
 
 public class TitleScreen extends JPanel {
 
@@ -18,9 +19,24 @@ public class TitleScreen extends JPanel {
     public final int maxScreenCol = 25;
     public final int maxScreenRow = 12;
 
+    private Image backgroundImage;
+
     Font minecraft;
 
     public TitleScreen(JFrame window) {
+
+        // Load the background image
+        try {
+            InputStream is = getClass().getResourceAsStream("/player/images/titlebg.png");
+            if (is != null) {
+                backgroundImage = ImageIO.read(is);
+            } else {
+                throw new IOException("Failed to load the background image");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         try {
             InputStream is = getClass().getResourceAsStream("/player/images/Minecraftia-Regular.ttf");
@@ -33,6 +49,8 @@ public class TitleScreen extends JPanel {
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        setOpaque(false);
+
         JLabel titleLabel = new JLabel("EcoFriends");
         titleLabel.setFont(new Font(minecraft.getName(), Font.BOLD, 50));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -41,15 +59,21 @@ public class TitleScreen extends JPanel {
         descriptionLabel.setFont(new Font(minecraft.getName(), Font.PLAIN, 25));
         descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+
+
         JLabel playLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/playbutton.png")));
         JLabel helpLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/helpbutton.png")));
+
+        playLabel.setOpaque(false);
+        helpLabel.setOpaque(false);
 
         playLabel.addMouseListener(new DarkeningMouseListener(playLabel, "/player/images/playbutton.png"));
         helpLabel.addMouseListener(new DarkeningMouseListener(helpLabel, "/player/images/helpbutton.png"));
 
-
         playLabel.setPreferredSize(new Dimension(100, 100));
         helpLabel.setPreferredSize(new Dimension(100, 100));
+
+
 
         playLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -66,6 +90,7 @@ public class TitleScreen extends JPanel {
         });
 
         JPanel imagePanel = new JPanel(new FlowLayout());
+        imagePanel.setOpaque(false); // This line ensures that the panel is transparent
         imagePanel.add(playLabel);
         imagePanel.add(Box.createRigidArea(new Dimension(10, 0)));
         imagePanel.add(helpLabel);
@@ -80,6 +105,15 @@ public class TitleScreen extends JPanel {
         add(Box.createVerticalGlue());
     }
 
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        // Draw the background image
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
     private void startGame(JFrame window) {
         window.getContentPane().removeAll();
         GamePanel gamePanel = new GamePanel();
@@ -139,8 +173,6 @@ public class TitleScreen extends JPanel {
         helpFrame.setVisible(true);
     }
 
-
-
     private static class DarkeningMouseListener extends MouseAdapter {
         private final JLabel label;
         private final ImageIcon originalIcon;
@@ -171,6 +203,8 @@ public class TitleScreen extends JPanel {
         public void mouseReleased(MouseEvent e) {
             label.setIcon(originalIcon);
         }
+
+
 
         private ImageIcon createDarkerIcon(ImageIcon originalIcon) {
 
