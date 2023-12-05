@@ -62,15 +62,19 @@ public class TitleScreen extends JPanel {
 
 
         JLabel playLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/playbutton.png")));
+        JLabel miniLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/playbutton.png")));
         JLabel helpLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/helpbutton.png")));
 
         playLabel.setOpaque(false);
+        miniLabel.setOpaque(false);
         helpLabel.setOpaque(false);
 
         playLabel.addMouseListener(new DarkeningMouseListener(playLabel, "/player/images/playbutton.png"));
+        miniLabel.addMouseListener(new DarkeningMouseListener(playLabel, "/player/images/playbutton.png"));
         helpLabel.addMouseListener(new DarkeningMouseListener(helpLabel, "/player/images/helpbutton.png"));
 
         playLabel.setPreferredSize(new Dimension(100, 100));
+        miniLabel.setPreferredSize(new Dimension(100, 100));
         helpLabel.setPreferredSize(new Dimension(100, 100));
 
 
@@ -81,7 +85,12 @@ public class TitleScreen extends JPanel {
                 startGame(window);
             }
         });
-
+        miniLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                smolGame(window);
+            }
+        });
         helpLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -92,6 +101,8 @@ public class TitleScreen extends JPanel {
         JPanel imagePanel = new JPanel(new FlowLayout());
         imagePanel.setOpaque(false); // This line ensures that the panel is transparent
         imagePanel.add(playLabel);
+        imagePanel.add(Box.createRigidArea(new Dimension(10, 0)));
+        imagePanel.add(miniLabel);
         imagePanel.add(Box.createRigidArea(new Dimension(10, 0)));
         imagePanel.add(helpLabel);
 
@@ -125,6 +136,11 @@ public class TitleScreen extends JPanel {
         gamePanel.requestFocusInWindow();
     }
 
+    private void smolGame(JFrame window) {
+        window.getContentPane().removeAll();
+        GameFrame frame = new GameFrame();
+    }
+
     private void showHelpPopup(JFrame parent) {
         JFrame helpFrame = new JFrame("Help");
         helpFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -139,10 +155,14 @@ public class TitleScreen extends JPanel {
         titleLabel.setFont(new Font(minecraft.getName(), Font.BOLD, 20));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JTextArea helpText = new JTextArea("\n\nDirections:\n\n" +
+        JTextArea helpText = new JTextArea("Directions:\n\n" +
                 "Use 'A' and 'D' keys to move Bara left and right.\n" +
                 "Catch falling corns to save the environment!\n\n" +
-                "TIP: Avoid missing too many corns.");
+                "TIP: Avoid missing too many corns.\n\n" +
+                "For the mini game: \n" +
+                "Use Up, Down, Left and Right keys to move Bara\n" +
+                "across the map and help him collect the trash!\n" +
+                "TIP: Avoid touching the borders or the game ends.");
         helpText.setEditable(false);
         helpText.setOpaque(false);
         helpText.setFont(new Font(minecraft.getName(), Font.PLAIN, 14));
