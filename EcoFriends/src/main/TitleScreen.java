@@ -62,7 +62,7 @@ public class TitleScreen extends JPanel {
 
 
         JLabel playLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/playbutton.png")));
-        JLabel miniLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/playbutton.png")));
+        JLabel miniLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/sidequest.png")));
         JLabel helpLabel = new JLabel(new ImageIcon(getClass().getResource("/player/images/helpbutton.png")));
 
         playLabel.setOpaque(false);
@@ -70,7 +70,7 @@ public class TitleScreen extends JPanel {
         helpLabel.setOpaque(false);
 
         playLabel.addMouseListener(new DarkeningMouseListener(playLabel, "/player/images/playbutton.png"));
-        miniLabel.addMouseListener(new DarkeningMouseListener(playLabel, "/player/images/playbutton.png"));
+        miniLabel.addMouseListener(new DarkeningMouseListener(miniLabel, "/player/images/sidequest.png"));
         helpLabel.addMouseListener(new DarkeningMouseListener(helpLabel, "/player/images/helpbutton.png"));
 
         playLabel.setPreferredSize(new Dimension(100, 100));
@@ -135,6 +135,7 @@ public class TitleScreen extends JPanel {
 
         gamePanel.requestFocusInWindow();
     }
+
 
     private void smolGame(JFrame window) {
         window.getContentPane().removeAll();
