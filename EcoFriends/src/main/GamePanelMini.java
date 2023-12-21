@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
 import java.util.Random;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.ImageIcon;
 
 public class GamePanelMini extends JPanel implements ActionListener {
 
@@ -33,6 +36,7 @@ public class GamePanelMini extends JPanel implements ActionListener {
     Random random;
     Font minecraft;
     JButton resetButton;
+    JButton backButton;
 
     GamePanelMini() {
         random = new Random();
@@ -75,20 +79,54 @@ public class GamePanelMini extends JPanel implements ActionListener {
             e.printStackTrace();
         }
 
-        resetButton = new JButton("Reset");
-        resetButton.setFont(new Font("Minecraftia", Font.BOLD, 20));
+        resetButton = new JButton(new ImageIcon(getClass().getResource("/player/images/resetbutton.png")));
         resetButton.addActionListener(e -> resetGame());
         resetButton.setFocusable(false);
         resetButton.setVisible(false);
-        resetButton.setBounds((SCREEN_WIDTH - 120) / 2, SCREEN_HEIGHT / 2 + 100, 120, 40);
 
+        resetButton.setBounds((SCREEN_WIDTH - 200) / 2, SCREEN_HEIGHT / 2 + 100, 200, 40);
 
-// Customize the button appearance
-        resetButton.setBackground(new Color(0, 128, 0));  // Green background
-        resetButton.setForeground(Color.white);           // White text color
-        resetButton.setBorder(new RoundedCornerBorder(10)); // Custom rounded border
+        resetButton.setContentAreaFilled(false);
+        resetButton.setBorderPainted(false);
+
         this.setLayout(null);
         this.add(resetButton);
+
+        backButton = new JButton(new ImageIcon(getClass().getResource("/player/images/backbutton.png")));
+        backButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Switch to the title screen
+                switchToTitleScreen();
+            }
+        });
+
+
+        backButton.setFocusable(false);
+        backButton.setVisible(true);
+
+        // Set the bounds for the back button to be in the upper left corner
+        backButton.setBounds(10, 20, 200, 40); // x, y, width, height
+
+        // Customize the button appearance
+        backButton.setContentAreaFilled(false); // Make the button transparent
+        backButton.setBorderPainted(false); // Remove the border
+
+        this.setLayout(null); // Use null layout to manually position components
+        this.add(backButton);
+    }
+    private void switchToTitleScreen() {
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        frame.getContentPane().removeAll();
+
+        TitleScreen titleScreen = new TitleScreen(frame);  // Pass the existing JFrame instance
+        titleScreen.switchToTitleScreen();  // Update the switchToTitleScreen method
+
+        frame.setLayout(new BorderLayout());
+        frame.add(titleScreen, BorderLayout.CENTER);
+
+        frame.validate();
+        frame.repaint();
     }
 
     public void startGame() {
