@@ -22,9 +22,12 @@ public class TitleScreen extends JPanel {
     private Image backgroundImage;
 
     Font minecraft;
+    private Dimension preferredSize;
+    private JFrame window;
 
     public TitleScreen(JFrame window) {
 
+        this.window = window;
         // Load the background image
         try {
             InputStream is = getClass().getResourceAsStream("/player/images/titlebg.png");
@@ -114,8 +117,13 @@ public class TitleScreen extends JPanel {
         add(Box.createRigidArea(new Dimension(0, 20)));
         add(imagePanel);
         add(Box.createVerticalGlue());
+        preferredSize = new Dimension(1186, 580);
     }
 
+    @Override
+    public Dimension getPreferredSize() {
+        return preferredSize; // Use the member variable directly
+    }
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -136,10 +144,19 @@ public class TitleScreen extends JPanel {
         gamePanel.requestFocusInWindow();
     }
 
-
     private void smolGame(JFrame window) {
+        GamePanelMini gamePanelMini = new GamePanelMini();
+        switchToPanel(gamePanelMini);
+    }
+
+    private void switchToPanel(JPanel newPanel) {
         window.getContentPane().removeAll();
-        GameFrame frame = new GameFrame();
+        window.getContentPane().add(newPanel);
+        window.revalidate();
+        window.repaint();
+        window.pack(); // Adjust the window size to fit the content
+        window.setLocationRelativeTo(null); // Center the window
+        newPanel.requestFocusInWindow();
     }
 
     private void showHelpPopup(JFrame parent) {
@@ -192,6 +209,13 @@ public class TitleScreen extends JPanel {
 
         helpFrame.add(contentPanel);
         helpFrame.setVisible(true);
+    }
+   public void switchToTitleScreen() {
+        // Set the dimensions based on the current size of the TitleScreen
+        setPreferredSize(new Dimension(1186, 539));
+
+        // Update the JFrame size to match the preferred size of TitleScreen
+        window.setSize(getPreferredSize());
     }
 
     private static class DarkeningMouseListener extends MouseAdapter {

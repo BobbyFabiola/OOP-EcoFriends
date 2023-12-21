@@ -36,7 +36,8 @@ public class GamePanel extends JPanel implements Runnable {
     //OBJECTS
     public AssetSetter aSetter = new AssetSetter (this);
     public SuperObject obj[] = new SuperObject[3];                                                                      //means we can display up to 10 objects at the same time
-
+    JButton backButton;
+    private boolean isBackButtonHovered = false;
     public GamePanel () {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
@@ -45,12 +46,86 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
 
         try {
-            backgroundImage = ImageIO.read(getClass().getResourceAsStream("/player/images/background.png"));      //background setting
+            backgroundImage = ImageIO.read(getClass().getResourceAsStream("/player/images/background.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        aSetter.setObject();                                                                                            //call to initialize objects
+        aSetter.setObject();
+        // Initialize the backButton with proper bounds and make it visible
+        ImageIcon backIcon = new ImageIcon(getClass().getResource("/player/images/backbutton.png"));
+        backButton = new JButton(backIcon);
+        backButton.addActionListener(e -> switchToTitleScreen());
+        backButton.setContentAreaFilled(false);
+        backButton.setFocusPainted(false);
+
+        backButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                isBackButtonHovered = true;
+                repaint();
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                isBackButtonHovered = false;
+                repaint();
+            }
+        });
+
+        this.setLayout(null);
+        this.add(backButton);
+        this.setVisible(true);
+    }
+
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        Graphics2D g2 = (Graphics2D) g;
+
+        if (backgroundImage != null) {
+            g2.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+
+        // Draw player
+        player.draw(g2);
+
+        // Draw corn objects
+        for (SuperObject corn : obj) {
+            if (corn != null) {
+                double scaleFactor = player.getScaleFactor();
+                int scaledWidth = (int) (tileSize * scaleFactor);
+                int scaledHeight = (int) (tileSize * scaleFactor);
+                g2.drawImage(corn.image, corn.worldX, corn.worldY, scaledWidth, scaledHeight, this);
+            }
+        }
+
+        // Draw backButton
+        ImageIcon backIcon = new ImageIcon(getClass().getResource("/player/images/backbutton.png"));
+        if (isBackButtonHovered) {
+            // Draw the button with hover effect
+            g2.drawImage(backIcon.getImage(), 20, 0, backIcon.getIconWidth(), backIcon.getIconHeight(), this);
+        } else {
+            // Draw the button without hover effect
+            backButton.setBounds(20, 0, backIcon.getIconWidth(), backIcon.getIconHeight());
+            backIcon.paintIcon(this, g2, 20, 0);  // Use paintIcon method
+        }
+
+        g2.dispose();
+
+    }
+
+    private void switchToTitleScreen() {
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        frame.getContentPane().removeAll(); // Remove all components
+
+        TitleScreen titleScreen = new TitleScreen(frame);
+        titleScreen.setPreferredSize(new Dimension(screenWidth, screenHeight));
+
+
+        frame.setLayout(new BorderLayout());
+        frame.add(titleScreen, BorderLayout.CENTER);
+
+        frame.validate();
+        frame.repaint();
     }
 
     public void startGameThread () {                                                                                    //instantiating the thread
@@ -88,27 +163,4 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    public void paintComponent (Graphics g) {                                                                           //built in method
-        super.paintComponent(g);
-
-        Graphics g2 = (Graphics2D)g;
-
-        if (backgroundImage != null) {
-            g2.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
-
-        player.draw(g2);
-
-        //DRAW CORN OBJECTS W/ SCALING
-        for (SuperObject corn: obj) {
-            if (corn != null) {
-//                double scaleFactor = player.getScaleFactor();
-                int scaledWidth = tileSize * 1;                                         // Adjust the scaling factor as needed
-                int scaledHeight = tileSize * 1;                                        // Adjust the scaling factor as needed
-                g2.drawImage(corn.image, corn.worldX, corn.worldY,scaledWidth, scaledHeight, null);
-            }
-        }
-
-        g2.dispose();
-    }
 }
